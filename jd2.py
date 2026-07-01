@@ -505,17 +505,17 @@ def submit_request_dialog():
         # =====================================================
         # DOWNLOAD UPDATED DATA.XLSX AFTER SUBMISSION
         # =====================================================
-        if os.path.exists("Data.xlsx"):
-            with open("Data.xlsx", "rb") as excel_file:
-                st.download_button(
-                    label="Download Current Data.xlsx",
-                    data=excel_file,
-                    file_name="Data.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    width="stretch"
-                )
-        else:
-            st.warning("Data.xlsx file was not found.")
+        # if os.path.exists("Data.xlsx"):
+        #     with open("Data.xlsx", "rb") as excel_file:
+        #         st.download_button(
+        #             label="Download Current Data.xlsx",
+        #             data=excel_file,
+        #             file_name="Data.xlsx",
+        #             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        #             width="stretch"
+        #         )
+        # else:
+        #     st.warning("Data.xlsx file was not found.")
 
 
         # st.rerun()
