@@ -365,14 +365,14 @@ def submit_request_dialog():
             )
 
 
-            salary_min = st.text_input(
-                "Min Salary",
-                value= st.session_state.get("suggested_min_salary", "")
-            )
-            salary_max = st.text_input(
-                "Max Salary",
-                value=st.session_state.get("suggested_max_salary", "")
-            )
+            # salary_min = st.text_input(
+            #     "Min Salary",
+            #     value= st.session_state.get("suggested_min_salary", "")
+            # )
+            # salary_max = st.text_input(
+            #     "Max Salary",
+            #     value=st.session_state.get("suggested_max_salary", "")
+            # )
 
     # det_tab code ends
 
@@ -541,8 +541,8 @@ def show():
     if "submission_status" not in st.session_state:
         st.session_state.submission_status = None
 
-    if "salary_range" not in st.session_state:
-        st.session_state.salary_range = None
+    # if "salary_range" not in st.session_state:
+    #     st.session_state.salary_range = None
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
@@ -796,18 +796,15 @@ def show():
         if "submission_status" not in st.session_state:
             st.session_state.submission_status = None
 
-        if "salary_range" not in st.session_state:
-            st.session_state.salary_range = None
+        # if "salary_range" not in st.session_state:
+        #     st.session_state.salary_range = None
 
         # ----------------------------
         # Generate JD
         # ----------------------------
         if generate:
 
-            suggested_min_salary, suggested_max_salary = get_salary_range(
-                job_family,
-                level
-            )
+            suggested_min_salary, suggested_max_salary = 0,0
 
             reference_sites, experience_range = get_reference_jds(
                 job_family,
@@ -855,8 +852,7 @@ def show():
             Target Start Quarter:
             {target_start_quarter}
 
-            Recommended Salary Range:
-            ${suggested_min_salary:,} - ${suggested_max_salary:,}
+            
 
             Reference Job Description Sources:
 
@@ -890,13 +886,13 @@ def show():
             jd = response.choices[0].message.content
 
             st.session_state.generated_jd = jd
-            st.session_state.suggested_min_salary = suggested_min_salary
-            st.session_state.suggested_max_salary = suggested_max_salary
+            # st.session_state.suggested_min_salary = suggested_min_salary
+            # st.session_state.suggested_max_salary = suggested_max_salary
 
-            st.session_state.salary_range = (
-                suggested_min_salary,
-                suggested_max_salary
-            )
+            # st.session_state.salary_range = (
+            #     suggested_min_salary,
+            #     suggested_max_salary
+            # )
 
             st.session_state.submission_status = None
             st.session_state.awaiting_review = False
@@ -907,8 +903,8 @@ def show():
         if st.session_state.generated_jd:
 
             jd = st.session_state.generated_jd
-            suggested_min_salary = st.session_state.suggested_min_salary
-            suggested_max_salary = st.session_state.suggested_max_salary
+            # suggested_min_salary = st.session_state.suggested_min_salary
+            # suggested_max_salary = st.session_state.suggested_max_salary
 
             st.header("Generated Job Description")
 
@@ -928,20 +924,20 @@ def show():
                         key="edit_jd"
                     )
 
-                st.subheader("Salary Range")
+                # st.subheader("Salary Range")
 
-                min_salary, max_salary = st.slider(
-                    "Select Salary Range",
-                    min_value=max(0, suggested_min_salary - 15000),
-                    max_value=suggested_max_salary + 15000,
-                    value=st.session_state.salary_range,
-                    step=1000
-                )
+                # min_salary, max_salary = st.slider(
+                #     "Select Salary Range",
+                #     min_value=max(0, suggested_min_salary - 15000),
+                #     max_value=suggested_max_salary + 15000,
+                #     value=st.session_state.salary_range,
+                #     step=1000
+                # )
 
-                st.info(
-                    f"Recommended Range: "
-                    f"${suggested_min_salary:,} - ${suggested_max_salary:,}"
-                )
+                # st.info(
+                #     f"Recommended Range: "
+                #     f"${suggested_min_salary:,} - ${suggested_max_salary:,}"
+                # )
 
                 col1, col2 = st.columns(2)
                 with col1:
@@ -952,10 +948,10 @@ def show():
 
 
             # Persist slider value
-            st.session_state.salary_range = (
-                min_salary,
-                max_salary
-            )
+            # st.session_state.salary_range = (
+            #     min_salary,
+            #     max_salary
+            # )
 
             # Ask review question after submit
             if submitted:
