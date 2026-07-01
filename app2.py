@@ -1,20 +1,70 @@
 import streamlit as st
-
+from process_flow import show_process_flow
 
 def hide_streamlit_toolbar():
     st.markdown("""
-    """, unsafe_allow_html=True)
+    <style>
 
+    /* Hide Deploy / Toolbar */
+    [data-testid="stToolbar"] {
+        display: none;
+    }
+
+    /* Hide hamburger menu */
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    /* Hide footer */
+    footer {
+        visibility: hidden;
+    }
+
+    /* Optional: Hide header */
+    header {
+        visibility: hidden;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)            
 
 import streamlit as st
 
-
 def maximize_page_space():
     st.markdown("""
+    <style>
+
+    /* Hide Streamlit toolbar */
+    [data-testid="stToolbar"] {
+        display: none;
+    }
+
+    /* Hide menu */
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    /* Hide footer */
+    footer {
+        visibility: hidden;
+    }
+
+    /* Hide header */
+    header {
+        display: none;
+    }
+
+    /* Reduce top whitespace */
+    .block-container {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+
+    </style>
     """, unsafe_allow_html=True)
 
-
 st.set_page_config(layout="wide")
+
 hide_streamlit_toolbar()
 maximize_page_space()
 
@@ -31,10 +81,11 @@ col1, col2 = st.columns([8, 1])
 with col1:
     st.markdown(
         """
-
-## Headcount Planning Workspace
+        <h1 style='margin-top:10px;color:#0078D4;'>
+        Headcount Planning Workspace
+        </h2>
         """,
-        unsafe_allow_html=True,
+        unsafe_allow_html=True
     )
 
 if "current_page" not in st.session_state:
@@ -43,30 +94,26 @@ if "current_page" not in st.session_state:
 if "selected_req" not in st.session_state:
     st.session_state.selected_req = None
 
-# Required for request_edit.py form flow from my_requests.py
-if "show_request_edit_form" not in st.session_state:
-    st.session_state.show_request_edit_form = False
-
 # st.divider()
 
 # Sidebar Menu
 with st.sidebar:
-    # IMPORTANT:
-    # st.set_page_config should be called only once and before other Streamlit commands.
-    # It is already called above, so the old duplicate call is intentionally not used here.
-    # st.set_page_config(initial_sidebar_state="expanded")
+
+    st.set_page_config(
+        initial_sidebar_state="expanded"
+    )
 
     # st.image("ETS_Digital_RGB_Ink.jpeg", width=100)
+
     st.markdown("### Navigation")
 
     pages = {
         "🏠 Home": "Home",
         "📝 Submit a Request": "Submit",
-        "📋 My Requests": "My Requests",
-        "👥 BU SLT Review": "SLT Review",
+        "👥 BU Review": "SLT Review",
         "📖 People Process Review": "People Process Review",
         "📖 HRBP Review": "HRBP Review",
-        "📖 Division Finance Review": "Comp Review",
+        "📖 Division Finance Review": "Division Finance Review",
         "📖 HRTA Review": "HRTA Review",
         "📖 Senior Leadership Review": "Senior Leadership Review",
         "📊 Session Analytics": "Session Analytics",
@@ -78,38 +125,65 @@ with st.sidebar:
     # =====================================================
     #0078D4
     st.markdown("""
+    <style>
+    .active-nav-item {
+        background-color: #D0D7DE;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid #D0D0D0;
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 42px;
+        margin-bottom: 12px;
+    }
+
+    .inactive-nav-item {
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 42px;
+        margin-bottom: 12px;
+    }
+
+    .inactive-nav-space {
+        margin-bottom: 12px;
+    }
+    </style>
     """, unsafe_allow_html=True)
 
     for label, page in pages.items():
+
         # If this is the currently selected page, show highlighted block
         if st.session_state.page == page:
             st.markdown(
                 f"""
- {label}
+                <div class="active-nav-item">
+                    {label}
+                </div>
                 """,
-                unsafe_allow_html=True,
+                unsafe_allow_html=True
             )
+
         # Otherwise show normal clickable button
         else:
             if st.button(
                 label,
                 use_container_width=True,
-                key=f"nav_{page}",
+                key=f"nav_{page}"
             ):
                 st.session_state.page = page
                 st.session_state.current_page = "home"
-
-                # Reset request edit state when user manually navigates to another page
-                st.session_state.show_request_edit_form = False
-                st.session_state.selected_req = None
-
                 st.rerun()
 
-    # st.markdown(
-    #     """
-    #     """,
-    #     unsafe_allow_html=True
-    # )
+            # st.markdown(
+            #     """
+            #     <div class="inactive-nav-space"></div>
+            #     """,
+            #     unsafe_allow_html=True
+            # )
 
     # for label, page in pages.items():
     #     if st.button(label, use_container_width=True):
@@ -121,15 +195,6 @@ page = st.session_state.page
 if st.session_state.current_page == "jd_edit":
     import jd_edit
     jd_edit.show()
-    st.stop()
-
-# Optional compatibility route for request_edit.py.
-# Your current my_requests.py directly imports request_edit and calls request_edit.show(...).
-# This block is added only so app2 also supports request_edit page routing if needed later.
-if st.session_state.current_page == "request_edit":
-    import request_edit
-    request_edit.show(st.session_state.selected_req)
-    st.stop()
 
 if page == "Home":
     # st.header("Home")
@@ -140,30 +205,33 @@ elif page == "Submit":
     import jd2
     jd2.show()
 
-elif page == "My Requests":
-    import my_requests
-    my_requests.show()
-
 elif page == "SLT Review":
-    st.header("SLT Review")
+    show_process_flow(current_step=3)
+    st.header("BU Review")
 
 elif page == "People Process Review":
+    show_process_flow(current_step=4)
     st.header("People Process Review")
 
 elif page == "HRBP Review":
+    show_process_flow(current_step=5)
     st.header("HRBP Review")
 
-elif page == "Comp Review":
+elif page == "Division Finance Review":
+    show_process_flow(current_step=6)
     st.header("Division Finance Review")
 
 elif page == "HRTA Review":
+    show_process_flow(current_step=7)
     st.header("HRTA Review")
 
 elif page == "Senior Leadership Review":
+    show_process_flow(current_step=8)
     st.header("Senior Leadership Review")
 
 elif page == "Session Analytics":
-    st.header("Session Analytics")
+    import session_analytics
+    session_analytics.show()
 
 elif page == "BU Settings":
     st.header("BU Settings")
