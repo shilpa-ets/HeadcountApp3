@@ -5,8 +5,7 @@ def show_process_flow(current_step=1):
     steps = [
         "Generate\nJD",
         "Submit\nRequest",
-        "BU SLT\nReview & Approval",
-        "Request\nSubmitted to HR",
+        "BU \nReview & Approval",
         "People\nProcess\nReview",
         "HRBP Review",
         "Division\nFinance\nReview",
